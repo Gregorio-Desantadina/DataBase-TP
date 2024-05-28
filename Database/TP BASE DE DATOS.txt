@@ -1,0 +1,76 @@
+A
+SELECT nombreEmpleado as "Trabaja en Banco Nacion" 
+FROM EMPLEADOS INNER JOIN  TRABAJA on TRABAJA.IDPersona = EMPLEADOS.IDEmpleado 
+WHERE TRABAJA.empresa = "Banco 
+
+B
+SELECT nombreEmpleado  as "Nombre Empleado", nombreCiudad as "Ciudad Recidencia"
+FROM EMPLEADOS INNER JOIN  LOCALIDADES on LOCALIDADES.codPostal = EMPLEADOS.codPostal;
+
+C
+SELECT nombreEmpleado  as "Cobra Mucho y trabaja en el banco", calle as "Calle", nombreCiudad as "Ciudad"
+FROM EMPLEADOS INNER JOIN  LOCALIDADES on LOCALIDADES.codPostal = EMPLEADOS.codPostal 
+JOIN TRABAJA on TRABAJA.IDPersona = EMPLEADOS.IDEmpleado
+WHERE salario >= 25000 AND empresa = "Banco Nacion";
+
+D
+SELECT nombreEmpleado as "Trabaja en misma ciudad que empresa"
+FROM EMPLEADOS INNER JOIN  EMPRESAS on EMPRESAS.codPostal = EMPLEADOS.codPostal 
+JOIN TRABAJA on TRABAJA.IDPersona = EMPLEADOS.IDEmpleado
+WHERE EMPLEADOS.codPostal = EMPRESAS.codPostal AND TRABAJA.empresa = EMPRESAS.nombreEmpresa;
+
+E
+SELECT nombrePersona as "Vive en la misma calle que", nombreSupervisor as "esta persona", calle 
+FROM SUPERVISA 
+INNER JOIN EMPLEADOS on EMPLEADOS.nombreEmpleado = SUPERVISA.nombrePersona
+WHERE EMPLEADOS.calle = (SELECT calle FROM SUPERVISA 
+INNER JOIN EMPLEADOS on EMPLEADOS.nombreEmpleado = SUPERVISA.nombreSupervisor);
+
+
+F
+SELECT nombreEmpleado as "No trabaja en Banco Nacion" 
+FROM EMPLEADOS INNER JOIN  TRABAJA on TRABAJA.IDPersona = EMPLEADOS.IDEmpleado 
+WHERE TRABAJA.empresa != "Banco Nacion";
+SELECT nombreEmpleado as "Trabajan" 
+FROM EMPLEADOS INNER JOIN  TRABAJA on TRABAJA.IDPersona = EMPLEADOS.IDEmpleado 
+WHERE TRABAJA.empresa != "";
+
+G
+SELECT nombreEmpleado as "Ganan que empleado banco nacion", salario, empresa
+FROM EMPLEADOS INNER JOIN  TRABAJA on TRABAJA.IDPersona = EMPLEADOS.IDEmpleado 
+WHERE (TRABAJA.salario >= (SELECT max(salario) FROM TRABAJA WHERE empresa = "Banco Nacion") 
+AND empresa != "Banco Nacion");
+
+H
+SELECT nombreEmpresa as "Misma Ciudad que el kiosko", nombreCiudad 
+FROM EMPRESAS INNER JOIN LOCALIDADES ON LOCALIDADES.codPostal = EMPRESAS.codPostal
+WHERE EMPRESAS.codPostal = (SELECT codPostal FROM EMPRESAS WHERE nombreEmpresa= "Kiosko de Cuchu") 
+AND nombreEmpresa != "Kiosko de Cuchu";
+
+I
+Banco Nacion PEPE RICARDO
+Shell JUAN STEVE
+Global GONZALO BOB
+Google ANA  JOHN
+Kiosko JAIME MAURICIO
+
+J
+UPDATE TRABAJA 
+SET salario = (salario + salario * 0.09)
+WHERE empresa = "Banco Central de Uruguay"; 
+
+K
+john ana Kiosko de Cuchu
+ricardo pepe banco nacion
+steve juan shell
+bob gonzalo Global
+mauricio jaime google
+
+L
+UPDATE TRABAJA 
+SET salario = (salario + salario * 0.095)
+WHERE salario = (SELECT salario 
+FROM SUPERVISA 
+INNER JOIN EMPLEADOS on EMPLEADOS.nombreEmpleado = SUPERVISA.nombreSupervisor 
+INNER JOIN TRABAJA on TRABAJA.IDPersona = EMPLEADOS.IDEmpleado
+WHERE TRABAJA.empresa = "Banco Nacion");
